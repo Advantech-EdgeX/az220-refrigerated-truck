@@ -42,6 +42,10 @@
               "target": "Package",
               "version": "[7.0.0, )"
             },
+            "M2Mqtt": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
             "Microsoft.Azure.Devices.Client": {
               "target": "Package",
               "version": "[1.37.2, )"
