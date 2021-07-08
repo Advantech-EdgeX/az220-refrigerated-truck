@@ -6,7 +6,10 @@
 
 Enable=true
 Address=edgex-mqtt-broker
+Port=1883
 Topic=MQTTExport
+User=
+Password=
 DeviceNames=
 #DeviceNames="MQTTAnalyticservice"
 #DeviceNames="Random-Integer-Generator01"
@@ -27,7 +30,10 @@ fi
 echo "--------------------------------------------------"
 echo "Enable     : ${Enable}"
 echo "Address    : ${Address}"
+echo "Port       : ${Port}"
 echo "Topic      : ${Topic}"
+echo "User       : ${User}"
+echo "Password   : ${Password}"
 echo "DeviceNames: ${DeviceNames}"
 echo "--------------------------------------------------"
 #==================================================
@@ -37,7 +43,7 @@ CONSUL_SETTING_URL=http://172.17.0.1:8500/v1/kv/edgex/appservices/1.0/MQTTExport
 docker images | grep -q advantech1234/docker-app-functions-mqtt
 RES=$?
 if [ ${RES} = 0 ]; then
-    echo "Create azure_export_register.sh & configuration.toml..."
+    echo "Create mqtt_export_register.sh & configuration.toml..."
 ########### configuration.toml ###########
 echo "[Writable]
 LogLevel = 'DEBUG'
@@ -123,8 +129,9 @@ PublishTopic='somewhere'
 DeviceNames   = \"${DeviceNames}\"
 Enable        = \"${Enable}\"
 Address       = \"${Address}\"
-User          = \"\"
-Password      = \"\"
+Port          = \"${Port}\"
+User          = \"${User}\"
+Password      = \"${Password}\"
 Topic         = \"${Topic}\"" > configuration.toml
 ########### configuration.toml end ###########
 
@@ -135,6 +142,9 @@ echo \"Register to EdgeX...\"
 sudo curl -X PUT -H \"Content-Type: text/plain\" --data \"${Enable}\" $CONSUL_SETTING_URL/Enable?raw
 sudo curl -X PUT -H \"Content-Type: text/plain\" --data \"${DeviceNames}\" $CONSUL_SETTING_URL/DeviceNames?raw
 sudo curl -X PUT -H \"Content-Type: text/plain\" --data \"${Address}\" $CONSUL_SETTING_URL/Address?raw
+sudo curl -X PUT -H \"Content-Type: text/plain\" --data \"${Port}\" $CONSUL_SETTING_URL/Port?raw
+sudo curl -X PUT -H \"Content-Type: text/plain\" --data \"${User}\" $CONSUL_SETTING_URL/User?raw
+sudo curl -X PUT -H \"Content-Type: text/plain\" --data \"${Password}\" $CONSUL_SETTING_URL/Password?raw
 sudo curl -X PUT -H \"Content-Type: text/plain\" --data \"${Topic}\" $CONSUL_SETTING_URL/Topic?raw
 echo \"Restart mqtt-export-service...\"
 sudo docker restart mqtt-export-service" > mqtt_export_register.sh
